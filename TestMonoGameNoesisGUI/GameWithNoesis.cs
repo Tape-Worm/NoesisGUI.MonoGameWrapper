@@ -1,4 +1,6 @@
-﻿namespace TestMonoGameNoesisGUI
+﻿using System;
+
+namespace TestMonoGameNoesisGUI
 {
 	#region
 
@@ -13,15 +15,20 @@
 	/// <summary>
 	///     This is an example MonoGame game using NoesisGUI
 	/// </summary>
+	/// </summary>
 	public class GameWithNoesis : Game
 	{
 		#region Fields
 
-		GraphicsDeviceManager graphics;
+		private GraphicsDeviceManager graphics;
 
-		private MonoGameNoesisGUIWrapper noesisGUIWrapper;
+		private NoesisWrapper noesisWrapper;
 
-		SpriteBatch spriteBatch;
+		private SpriteBatch spriteBatch;
+
+		// NOTE: In a real application, one would use a texture atlas, instead of two different textures ;-)
+		private Texture2D monogameLogo;
+		private Texture2D noesisGuiLogo;
 
 		#endregion
 
@@ -29,7 +36,19 @@
 
 		public GameWithNoesis()
 		{
-			graphics = new GraphicsDeviceManager(this);
+			graphics = new GraphicsDeviceManager(this)
+			{
+				// TODO: Disable/enable MSAA here
+				PreferMultiSampling = true
+			};
+
+			graphics.PreparingDeviceSettings += delegate(object sender, PreparingDeviceSettingsEventArgs args)
+				{
+					// TODO: Set MSAA levels here
+					var presentationParameters = args.GraphicsDeviceInformation.PresentationParameters;
+					presentationParameters.MultiSampleCount = 8;
+				};
+
 			Content.RootDirectory = "Content";
 		}
 
@@ -43,18 +62,9 @@
 		/// <param name="gameTime">Provides a snapshot of timing values.</param>
 		protected override void Draw(GameTime gameTime)
 		{
-			this.noesisGUIWrapper.PreRender(gameTime);
-
-			this.GraphicsDevice.Clear(
-				ClearOptions.Target | ClearOptions.DepthBuffer | ClearOptions.Stencil,
-				Color.CornflowerBlue,
-				1,
-				0);
-
-			// TODO: Add your drawing code here
-
-			this.noesisGUIWrapper.PostRender();
-
+			this.noesisWrapper.PreRender(gameTime);
+			this.Render(gameTime);
+			this.noesisWrapper.PostRender();
 			base.Draw(gameTime);
 		}
 
@@ -68,10 +78,10 @@
 		{
 			this.IsMouseVisible = true;
 
-			this.noesisGUIWrapper = new MonoGameNoesisGUIWrapper(
+			this.noesisWrapper = new NoesisWrapper(
 				this,
 				this.graphics,
-				"TextBox.xaml",
+				rootXamlPath: "NoesisRoot.xaml",
 				stylePath: "NoesisStyle.xaml",
 				dataLocalPath: "Data");
 
@@ -90,6 +100,11 @@
 			spriteBatch = new SpriteBatch(GraphicsDevice);
 
 			// TODO: use this.Content to load your game content here
+			this.monogameLogo = this.Content.Load<Texture2D>("MonogameLogo");
+			this.noesisGuiLogo = this.Content.Load<Texture2D>("NoesisGuiLogo");
+
+			var textureSource = this.noesisWrapper.ConvertTextureToNoesis(this.monogameLogo);
+			this.noesisWrapper.View.Content.DataContext = textureSource;
 		}
 
 		/// <summary>
@@ -114,11 +129,38 @@
 				Exit();
 			}
 
-			this.noesisGUIWrapper.Update(gameTime);
-
-			// TODO: Add your update logic here
+			this.noesisWrapper.Update(gameTime);
+			
+			Tick(gameTime);
 
 			base.Update(gameTime);
+		}
+
+		protected virtual void Tick(GameTime gameTime)
+		{
+			// TODO: Add your update logic here
+		}
+
+		protected virtual void Render(GameTime gameTime)
+		{
+			// TODO: Add your drawing code here
+			this.GraphicsDevice.Clear(
+				ClearOptions.Target | ClearOptions.DepthBuffer | ClearOptions.Stencil,
+				Color.CornflowerBlue,
+				1,
+				0);
+
+			// NOTE: Ignore any Commodore 64/Amiga demo-style code here ;-)
+			var backBufferWidth = this.GraphicsDevice.PresentationParameters.BackBufferWidth;
+			var backBufferHeight = this.GraphicsDevice.PresentationParameters.BackBufferHeight;
+			float logoPosX = (float)(gameTime.TotalGameTime.TotalSeconds * 200 % backBufferWidth);
+			float logoPosY = (float)(Math.Abs(50 * Math.Sin(gameTime.TotalGameTime.TotalSeconds * 5)));
+			var scale = new Vector2(0.1f);
+
+			this.spriteBatch.Begin();
+			this.spriteBatch.Draw(monogameLogo, new Vector2(logoPosX, logoPosY), scale: scale);
+			this.spriteBatch.Draw(noesisGuiLogo, new Vector2(backBufferWidth - logoPosX, backBufferHeight - noesisGuiLogo.Height * scale.Y - logoPosY), scale: scale);
+			this.spriteBatch.End();
 		}
 
 		#endregion

@@ -56,14 +56,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\DeviceDX11StateHelper.cs" />
-    <Compile Include="MonoGameNoesisGUIWrapper.cs" />
-    <Compile Include="Input\MonoGameNoesisGUIWrapperInputManager.cs" />
-    <Compile Include="Input\NoesisKeyCodes.cs" />
+    <Compile Include="NoesisWrapper.cs" />
+    <Compile Include="Input\InputManager.cs" />
+    <Compile Include="Input\KeyMappings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NoesisGUI-SDK\NoesisGUI\NoesisGUI.csproj">
-      <Project>{324797A8-3464-4290-A307-2AB238BACCA3}</Project>
+    <ProjectReference Include="..\NoesisGUI-SDK\Src\NoesisManaged.csproj">
       <Name>NoesisGUI</Name>
     </ProjectReference>
   </ItemGroup>

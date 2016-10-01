@@ -1,7 +1,7 @@
-NoesisGUI MonoGame Integration
+NoesisGUI 1.3 beta MonoGame Integration (forked from [aienabled](https://github.com/aienabled/NoesisGUI.MonoGameWrapper))
 =============
-This library provides solution for integration [NoesisGUI](http://noesisengine.com) with [MonoGame](http://monogame.net) library.
-Currently it supports only MonoGame projects for Windows DX11. OpenGL support planned.
+This library provides a solution for integration [NoesisGUI 1.3](http://noesisengine.com) with [MonoGame 3.*](http://monogame.net) library.
+Currently it supports only MonoGame projects for Windows DX11.
 Example MonoGame project with integrated NoesisGUI is included.
 
 Prerequisites
@@ -11,36 +11,29 @@ Prerequisites
 
 Installation
 -----
-1. Download C# API Windows SDK from [NoesisGUI Forums](http://www.noesisengine.com/forums/viewtopic.php?f=3&t=91).
-2. Extract it to the folder `\NoesisGUI-SDK\`. The resulting directory tree should look like this:
+1. Download the 1.3 C# API Windows SDK from [NoesisGUI Forums](http://www.noesisengine.com/forums/download/file.php?id=229).
+2. Extract it to the folder `\NoesisGUI-SDK\`. The resulting directory tree should then contain the following subfolders:
         
         NoesisGUI-SDK
-          |--BuildTool
-          |--GLUTWrapper
-          |--IntegrationSample
-          |--NoesisGUI
+          |--Bin
+          |--Doc
+          |--Samples
+          |--Src
         
 3. Open `NoesisGUI.MonoGameWrapper.sln` with Visual Studio 2013/2015
-4. Open `NoesisGUI` project properties and add the post build action to copy native `Noesis.dll` to the output libs directory:
-        
-        robocopy /XO /NP /NJH /NJS "$(ProjectDir)NoesisGUI" "$(SolutionDir)Libs\Output" /IF Noesis.dll
-        if %errorlevel% gtr 3 (exit %errorlevel%) else (cd .)
-        
-5. Open context menu on `TestMonoGameNoesisGUI` project and select `Set as StartUp Project`.
-6. Press F5 to launch the example game project.
-7. Please note that the game example project uses pre-built NoesisGUI controls from NoesisGUI SDK (it robocopy them from it on post-build). To create an actual game you should use NoesisGUI Build Tool to build .XAML to .NSB files.
+4. Open context menu on `TestMonoGameNoesisGUI` project and select `Set as StartUp Project`.
+5. Press F5 to launch the example game project.
 
-Roadmap
+Known issues
 -----
-* Add proper input key-repeat handling (currenly some keys (delete, arrows, etc) not repeating properly when you hold them).
-* Add OpenGL support.
-* Add configuration for Anti-Aliasing mode and offscreen buffer size (requires changes at NoesisGUI SDK project: method `UIRenderer.Resize(int width, int height)`).
-* Loading XAML's without pre-building to .NSB-files (planned at NoesisGUI v1.3).
-* Add touch input support.
+* DeviceLost and DeviceReset are implemented (not required for DX11 I guess, but might be for other renderers)
+* Text editing is not that great, key combinations - like quickly pressing BACKSPACE and then A- or not handled correctly.
+
 
 Contributing
 -----
 Pull requests are welcome.
+
 Please make your code compliant with Microsoft recommended coding conventions:
 * [General Naming Conventions](https://msdn.microsoft.com/en-us/library/ms229045%28v=vs.110%29.aspx) 
 * [C# Coding Conventions](https://msdn.microsoft.com/en-us/library/ff926074.aspx)
