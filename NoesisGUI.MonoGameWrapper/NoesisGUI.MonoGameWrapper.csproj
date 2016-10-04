@@ -19,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <UseVSHostingProcess>true</UseVSHostingProcess>
@@ -62,7 +62,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NoesisSDK\Src\Tools\NoesisManaged\Src\NoesisManaged.csproj">
+    <ProjectReference Include="..\NoesisSDK\Src\NoesisManaged.csproj">
       <Project>{324797a8-3464-4290-a307-2ab238bacca3}</Project>
       <Name>NoesisManaged</Name>
     </ProjectReference>

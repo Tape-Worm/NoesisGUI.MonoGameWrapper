@@ -93,10 +93,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NoesisSDK\Src\Tools\NoesisManaged\Src\NoesisManaged.csproj">
-      <Project>{324797a8-3464-4290-a307-2ab238bacca3}</Project>
-      <Name>NoesisManaged</Name>
-    </ProjectReference>
     <ProjectReference Include="..\NoesisGUI.MonoGameWrapper\NoesisGUI.MonoGameWrapper.csproj">
       <Project>{7B629986-9BCF-48F4-AACA-6AA872154C81}</Project>
       <Name>NoesisGUI.MonoGameWrapper</Name>

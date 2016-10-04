@@ -4,11 +4,6 @@ This library provides a solution for integration [NoesisGUI 1.3](http://noesisen
 Currently it supports only MonoGame projects for Windows DX11.
 Example MonoGame project with integrated NoesisGUI is included.
 
-Remarks
------
-This code contains some unofficial experiments with sharing Monogame textures with Noesis. 
-You need to comment-out that code to get it running with 1.3 beta2
-
 Prerequisites
 -----
 * [Visual Studio 2015](https://www.visualstudio.com/), any edition will be fine.

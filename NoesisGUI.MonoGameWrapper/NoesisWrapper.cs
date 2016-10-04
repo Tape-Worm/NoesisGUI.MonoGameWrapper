@@ -175,6 +175,7 @@
 			get { return this.view; }
 		}
 
+#if EXPERIMENTAL
 		public Noesis.TextureSource ConvertTextureToNoesis(Texture2D texture)
 		{
 			var method = texture.GetType().GetMethod("GetTexture", BindingFlags.Instance | BindingFlags.NonPublic);
@@ -185,5 +186,6 @@
 
 			return noesisTexture;
 		}
+#endif
 	}
 }

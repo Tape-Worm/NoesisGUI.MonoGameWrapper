@@ -25,6 +25,9 @@ Icon7
 *.VC.*
 *.tmp
 
+.hg
+.svn
+
 /NoesisSDK/*
 !/NoesisSDK/Extract NoesisGUI SDK here
 
