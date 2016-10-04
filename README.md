@@ -1,8 +1,13 @@
-NoesisGUI 1.3 beta MonoGame Integration (forked from [aienabled](https://github.com/aienabled/NoesisGUI.MonoGameWrapper))
+NoesisGUI 1.3 beta MonoGame Integration experiment (forked from [aienabled](https://github.com/aienabled/NoesisGUI.MonoGameWrapper))
 =============
 This library provides a solution for integration [NoesisGUI 1.3](http://noesisengine.com) with [MonoGame 3.*](http://monogame.net) library.
 Currently it supports only MonoGame projects for Windows DX11.
 Example MonoGame project with integrated NoesisGUI is included.
+
+Remarks
+-----
+This code contains some unofficial experiments with sharing Monogame textures with Noesis. 
+You need to comment-out that code to get it running with 1.3 beta2
 
 Prerequisites
 -----
@@ -12,9 +17,9 @@ Prerequisites
 Installation
 -----
 1. Download the 1.3 C# API Windows SDK from [NoesisGUI Forums](http://www.noesisengine.com/forums/download/file.php?id=229).
-2. Extract it to the folder `\NoesisGUI-SDK\`. The resulting directory tree should then contain the following subfolders:
+2. Extract it to the folder `\NoesisSDK\`. The resulting directory tree should then contain the following subfolders:
         
-        NoesisGUI-SDK
+        NoesisSDK
           |--Bin
           |--Doc
           |--Samples
@@ -26,17 +31,8 @@ Installation
 
 Known issues
 -----
-* DeviceLost and DeviceReset are implemented (not required for DX11 I guess, but might be for other renderers)
-* Text editing is not that great, key combinations - like quickly pressing BACKSPACE and then A- or not handled correctly.
-
-
-Contributing
------
-Pull requests are welcome.
-
-Please make your code compliant with Microsoft recommended coding conventions:
-* [General Naming Conventions](https://msdn.microsoft.com/en-us/library/ms229045%28v=vs.110%29.aspx) 
-* [C# Coding Conventions](https://msdn.microsoft.com/en-us/library/ff926074.aspx)
+* DeviceLost and DeviceReset are not implemented (not required for DX11 I guess, but might be for other renderers)
+* Text editing is partially fixed in this issue (the repeat rate for non-printable keys is different from the OS)
 
 License
 -----
