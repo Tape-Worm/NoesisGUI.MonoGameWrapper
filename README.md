@@ -11,7 +11,7 @@ You need to comment-out that code to get it running with 1.3 beta2
 
 Prerequisites
 -----
-* [Visual Studio 2013 or 2015](https://www.visualstudio.com/), any edition will be fine.
+* [Visual Studio 2015](https://www.visualstudio.com/), any edition will be fine.
 * [MonoGame 3.* for VisualStudio](http://monogame.net)
 
 Installation
