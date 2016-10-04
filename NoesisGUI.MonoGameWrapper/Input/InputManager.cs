@@ -113,15 +113,11 @@ namespace NoesisGUI.MonoGameWrapper.Input
 
 			private readonly List<Keys> pressedKeys = new List<Keys>();
 			private readonly List<Keys> releasedKeys = new List<Keys>();
-			private readonly List<Keys> repeatedKeys = new List<Keys>();
 			private RepeatingKey repeatingKey;
 
 			private readonly Noesis.View rootView;
 
 			private Keys[] previousKeys = new Keys[0];
-
-			[DllImport("user32.dll")]
-			static extern uint MapVirtualKey(uint uCode, uint uMapType);
 
 			#endregion
 
@@ -156,7 +152,6 @@ namespace NoesisGUI.MonoGameWrapper.Input
 
 				// determine pressed since last update keys
 				this.pressedKeys.Clear();
-				this.repeatedKeys.Clear();
 
 				ModifierKeyFlags modifierKeysFlags = 0;
 
@@ -177,7 +172,7 @@ namespace NoesisGUI.MonoGameWrapper.Input
 						{
 							if (currentTime >= repeatingKey.RepeatTime)
 							{
-								this.repeatedKeys.Add(key);
+								this.pressedKeys.Add(key);
 								repeatingKey = new RepeatingKey(key, currentTime, repeatingKey.RepeatCount);
 							}
 						}
@@ -201,34 +196,14 @@ namespace NoesisGUI.MonoGameWrapper.Input
 					}
 				}
 
-				if (this.pressedKeys.Count > 0)
-				{
-					Debug.WriteLine(string.Join(" ", this.pressedKeys));
-				}
-
 				// for each pressed key - KeyDown
-				foreach (var keyDown in this.pressedKeys.Concat(this.repeatedKeys))
+				foreach (var keyDown in this.pressedKeys)
 				{
-					//// Convert to char
-					//var localKey = (char)MapVirtualKey((uint)keyDown, 2);
-
-					//// If any other modifier keys than SHIFT are press, ignore the mapping to char
-					//if (localKey != 0 && !char.IsControl(localKey) && (modifierKeysFlags & ~ModifierKeyFlags.Shift) == 0)
-					//{
-					//	var localChar = modifierKeysFlags.HasFlag(ModifierKeyFlags.Shift)
-					//		? char.ToUpper(localKey)
-					//		: char.ToLower(localKey);
-
-					//	this.rootView.Char(localChar);
-					//}
-					//else
-					//{
-						var noesisKey = MonoGameNoesisKeys.Convert(keyDown);
-						if (noesisKey != Noesis.Key.None)
-						{
-							this.rootView.KeyDown(noesisKey);
-						}
-					//}
+					var noesisKey = MonoGameNoesisKeys.Convert(keyDown);
+					if (noesisKey != Noesis.Key.None)
+					{
+						this.rootView.KeyDown(noesisKey);
+					}
 				}
 
 				// for each released key - KeyUp

@@ -163,7 +163,6 @@
 		</GroupBox>
 		<UniformGrid Grid.Column="1" Rows="2">
 			<GroupBox
-            Width="300"
             Margin="10,0,0,0"
             Header="TextBox"
             Padding="10">
@@ -182,17 +181,24 @@
                Text="Growing size"
                TextWrapping="{Binding SelectedItem.Content, ElementName=WrapText}"/>
 			</GroupBox>
-			<GroupBox
-            Width="300"
+			<UniformGrid Columns="2">
+				<GroupBox
+            Margin="10,0,0,0"
+            Header="Monogame render target"
+            Padding="10">
+					<Image Width="64" Height="64" Source="{Binding MonogameRenderTarget}"  Stretch="Fill"/>
+				</GroupBox>
+				<GroupBox
             Margin="10,0,0,0"
             Header="Monogame texture"
             Padding="10">
-				<Rectangle>
-					<Rectangle.Fill>
-						<ImageBrush ImageSource="{Binding}"/>
-					</Rectangle.Fill>
-				</Rectangle>
-			</GroupBox>
+					<Rectangle Width="64" Height="64">
+						<Rectangle.Fill>
+							<ImageBrush ImageSource="{Binding MonogameTexture}"/>
+						</Rectangle.Fill>
+					</Rectangle>
+				</GroupBox>
+			</UniformGrid>
 		</UniformGrid>
 	</Grid>
 </Grid>

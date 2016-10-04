@@ -97,8 +97,8 @@
 			context.InputAssembler.SetIndexBuffer(this.ib, this.ibFormat, this.ibOffset);
 			context.InputAssembler.SetVertexBuffers(0, this.vb, this.vbStride, this.vbOffset);
 
-			this.renderTargetView[0].Dispose();
-			this.depthStencilView.Dispose();
+			this.renderTargetView[0]?.Dispose();
+			this.depthStencilView?.Dispose();
 		}
 
 		public void Save(DeviceContext context)

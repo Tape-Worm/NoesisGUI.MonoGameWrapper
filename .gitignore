@@ -22,11 +22,11 @@ Icon7
 *.vsp
 *.opensdf
 *.sdf
-
+*.VC.*
 *.tmp
 
-/NoesisGUI-SDK/*
-!/NoesisGUI-SDK/Extract NoesisGUI SDK here
+/NoesisSDK/*
+!/NoesisSDK/Extract NoesisGUI SDK here
 
 /Libs/Output
 */Libs/Output

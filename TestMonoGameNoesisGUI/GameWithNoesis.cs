@@ -4,17 +4,33 @@ namespace TestMonoGameNoesisGUI
 {
 	#region
 
+	using System.Diagnostics;
+
 	using Microsoft.Xna.Framework;
 	using Microsoft.Xna.Framework.Graphics;
 	using Microsoft.Xna.Framework.Input;
 
 	using NoesisGUI.MonoGameWrapper;
 
+	using Color = Microsoft.Xna.Framework.Color;
+	using Keyboard = Microsoft.Xna.Framework.Input.Keyboard;
+
 	#endregion
 
+	public class ViewModel
+	{
+		public Noesis.TextureSource MonogameTexture { get; }
+		public Noesis.TextureSource MonogameRenderTarget { get; }
+
+		public ViewModel(Noesis.TextureSource monogameTexture, Noesis.TextureSource monogameRenderTarget)
+		{
+			this.MonogameTexture = monogameTexture;
+			this.MonogameRenderTarget = monogameRenderTarget;
+		}
+	}
+
 	/// <summary>
-	///     This is an example MonoGame game using NoesisGUI
-	/// </summary>
+	///     This is an example MonoGame game using NoesisGUI 1.3 beta
 	/// </summary>
 	public class GameWithNoesis : Game
 	{
@@ -27,8 +43,11 @@ namespace TestMonoGameNoesisGUI
 		private SpriteBatch spriteBatch;
 
 		// NOTE: In a real application, one would use a texture atlas, instead of two different textures ;-)
-		private Texture2D monogameLogo;
-		private Texture2D noesisGuiLogo;
+		private Texture2D monogameLogoTexture;
+		private Texture2D noesisGuiLogoTexture;
+		private RenderTarget2D renderTarget;
+
+		private ViewModel viewModel;
 
 		#endregion
 
@@ -100,11 +119,19 @@ namespace TestMonoGameNoesisGUI
 			spriteBatch = new SpriteBatch(GraphicsDevice);
 
 			// TODO: use this.Content to load your game content here
-			this.monogameLogo = this.Content.Load<Texture2D>("MonogameLogo");
-			this.noesisGuiLogo = this.Content.Load<Texture2D>("NoesisGuiLogo");
+			this.monogameLogoTexture = this.Content.Load<Texture2D>("MonogameLogo");
+			this.noesisGuiLogoTexture = this.Content.Load<Texture2D>("NoesisGuiLogo");
 
-			var textureSource = this.noesisWrapper.ConvertTextureToNoesis(this.monogameLogo);
-			this.noesisWrapper.View.Content.DataContext = textureSource;
+			// NOTE: Monogame does not support mip-map generation on a RenderTarget
+			// But I patched NoesisGUI so it exposes mip-map generation through the TextureSource
+			this.renderTarget = new RenderTarget2D(GraphicsDevice, 512, 512, true, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
+
+			// An example of how to share a monogame texture with Noesis
+			var textureSource = this.noesisWrapper.ConvertTextureToNoesis(this.monogameLogoTexture);
+			var targetSource = this.noesisWrapper.ConvertTextureToNoesis(this.renderTarget);
+
+			this.viewModel = new ViewModel(textureSource, targetSource);
+			this.noesisWrapper.View.Content.DataContext = viewModel;
 		}
 
 		/// <summary>
@@ -143,13 +170,6 @@ namespace TestMonoGameNoesisGUI
 
 		protected virtual void Render(GameTime gameTime)
 		{
-			// TODO: Add your drawing code here
-			this.GraphicsDevice.Clear(
-				ClearOptions.Target | ClearOptions.DepthBuffer | ClearOptions.Stencil,
-				Color.CornflowerBlue,
-				1,
-				0);
-
 			// NOTE: Ignore any Commodore 64/Amiga demo-style code here ;-)
 			var backBufferWidth = this.GraphicsDevice.PresentationParameters.BackBufferWidth;
 			var backBufferHeight = this.GraphicsDevice.PresentationParameters.BackBufferHeight;
@@ -157,9 +177,33 @@ namespace TestMonoGameNoesisGUI
 			float logoPosY = (float)(Math.Abs(50 * Math.Sin(gameTime.TotalGameTime.TotalSeconds * 5)));
 			var scale = new Vector2(0.1f);
 
+			// Render to texture
+			this.GraphicsDevice.SetRenderTarget(this.renderTarget);
+			this.GraphicsDevice.Clear(Color.SandyBrown);
+
 			this.spriteBatch.Begin();
-			this.spriteBatch.Draw(monogameLogo, new Vector2(logoPosX, logoPosY), scale: scale);
-			this.spriteBatch.Draw(noesisGuiLogo, new Vector2(backBufferWidth - logoPosX, backBufferHeight - noesisGuiLogo.Height * scale.Y - logoPosY), scale: scale);
+			this.spriteBatch.Draw(this.noesisGuiLogoTexture, 
+				origin: new Vector2(this.noesisGuiLogoTexture.Width/2f, this.noesisGuiLogoTexture.Height/2f), 
+				rotation:(float)gameTime.TotalGameTime.TotalSeconds,
+				position: new Vector2(this.renderTarget.Width / 2f, this.renderTarget.Width / 2f));
+			this.spriteBatch.End();
+
+			this.viewModel.MonogameRenderTarget.GenerateMipMaps();
+
+			// Render to backbuffer 
+			this.GraphicsDevice.SetRenderTarget(null);
+
+			// TODO: Add your drawing code here
+			this.GraphicsDevice.Clear(
+				ClearOptions.Target | ClearOptions.DepthBuffer | ClearOptions.Stencil,
+				Color.CornflowerBlue,
+				1,
+				0);
+
+
+			this.spriteBatch.Begin();
+			this.spriteBatch.Draw(this.monogameLogoTexture, new Vector2(logoPosX, logoPosY), scale: scale);
+			this.spriteBatch.Draw(this.noesisGuiLogoTexture, new Vector2(backBufferWidth - logoPosX, backBufferHeight - this.noesisGuiLogoTexture.Height * scale.Y - logoPosY), scale: scale);
 			this.spriteBatch.End();
 		}
 

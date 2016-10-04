@@ -62,8 +62,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NoesisGUI-SDK\Src\NoesisManaged.csproj">
-      <Name>NoesisGUI</Name>
+    <ProjectReference Include="..\NoesisSDK\Src\Tools\NoesisManaged\Src\NoesisManaged.csproj">
+      <Project>{324797a8-3464-4290-a307-2ab238bacca3}</Project>
+      <Name>NoesisManaged</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

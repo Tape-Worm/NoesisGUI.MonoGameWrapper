@@ -143,7 +143,7 @@
 		private Noesis.View CreateRootView(string rootXamlPath, string stylePath)
 		{
 			Noesis.ResourceDictionary theme = (Noesis.ResourceDictionary)Noesis.GUI.LoadXaml(stylePath ?? "NoesisStyle.xaml");
-			Noesis.Grid content = (Noesis.Grid)Noesis.GUI.LoadXaml(rootXamlPath);
+			var content = (Noesis.FrameworkElement)Noesis.GUI.LoadXaml(rootXamlPath);
 			var view = Noesis.GUI.CreateView(content, theme);
 			return view;
 		}
@@ -181,11 +181,7 @@
 			
 			var dx11Texture = (DX11.Texture2D)method.Invoke(texture, null);
 
-			var noesisTexture = new Noesis.TextureSource(
-				dx11Texture.NativePointer,
-				texture.Width,
-				texture.Height,
-				texture.LevelCount);
+			var noesisTexture = new Noesis.TextureSource(this.view, dx11Texture.NativePointer);
 
 			return noesisTexture;
 		}
