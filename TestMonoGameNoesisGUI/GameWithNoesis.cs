@@ -35,14 +35,12 @@ namespace TestMonoGameNoesisGUI
 		private Texture2D noesisGuiLogoTexture;
 		private RenderTarget2D renderTarget;
 
-#if EXPERIMENTAL
-
 		public class ViewModel
 		{
-			public Noesis.TextureSource MonogameTexture { get; }
-			public Noesis.TextureSource MonogameRenderTarget { get; }
+			public IWrappedTexture MonogameTexture { get; }
+			public IWrappedTexture MonogameRenderTarget { get; }
 
-			public ViewModel(Noesis.TextureSource monogameTexture, Noesis.TextureSource monogameRenderTarget)
+			public ViewModel(IWrappedTexture monogameTexture, IWrappedTexture monogameRenderTarget)
 			{
 				this.MonogameTexture = monogameTexture;
 				this.MonogameRenderTarget = monogameRenderTarget;
@@ -50,7 +48,6 @@ namespace TestMonoGameNoesisGUI
 		}
 
 		private ViewModel viewModel;
-#endif
 
 #endregion
 
@@ -103,9 +100,10 @@ namespace TestMonoGameNoesisGUI
 			this.noesisWrapper = new NoesisWrapper(
 				this,
 				this.graphics,
-				rootXamlPath: "NoesisRoot.xaml",
-				stylePath: "NoesisStyle.xaml",
-				dataLocalPath: "Data");
+				shouldAutoReloadChangedFiles:true,
+				rootXamlRelativePath: "NoesisRoot.xaml",
+				themeResourcesRelativePath: "NoesisStyle.xaml",
+				dataPath: @"..\..\..\Data");
 
 			// TODO: Add your initialization logic here
 
@@ -125,18 +123,14 @@ namespace TestMonoGameNoesisGUI
 			this.monogameLogoTexture = this.Content.Load<Texture2D>("MonogameLogo");
 			this.noesisGuiLogoTexture = this.Content.Load<Texture2D>("NoesisGuiLogo");
 
-			// NOTE: Monogame does not support mip-map generation on a RenderTarget
-			// But I patched NoesisGUI so it exposes mip-map generation through the TextureSource
 			this.renderTarget = new RenderTarget2D(GraphicsDevice, 512, 512, true, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
 
-#if EXPERIMENTAL
 			// An example of how to share a monogame texture with Noesis
-			var textureSource = this.noesisWrapper.ConvertTextureToNoesis(this.monogameLogoTexture);
-			var targetSource = this.noesisWrapper.ConvertTextureToNoesis(this.renderTarget);
+			var textureSource = this.noesisWrapper.Wrap(this.monogameLogoTexture);
+			var targetSource = this.noesisWrapper.Wrap(this.renderTarget);
 
 			this.viewModel = new ViewModel(textureSource, targetSource);
 			this.noesisWrapper.View.Content.DataContext = viewModel;
-#endif
 		}
 
 		/// <summary>
@@ -182,7 +176,6 @@ namespace TestMonoGameNoesisGUI
 			float logoPosY = (float)(Math.Abs(50 * Math.Sin(gameTime.TotalGameTime.TotalSeconds * 5)));
 			var scale = new Vector2(0.1f);
 
-#if EXPERIMENTAL
 			// Render to texture
 			this.GraphicsDevice.SetRenderTarget(this.renderTarget);
 			this.GraphicsDevice.Clear(Color.SandyBrown);
@@ -195,7 +188,6 @@ namespace TestMonoGameNoesisGUI
 			this.spriteBatch.End();
 
 			this.viewModel.MonogameRenderTarget.GenerateMipMaps();
-#endif
 
 			// Render to backbuffer 
 			this.GraphicsDevice.SetRenderTarget(null);

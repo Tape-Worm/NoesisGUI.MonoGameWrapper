@@ -9,6 +9,9 @@ bin/
 *.user
 *.userprefs
 *.pidb
+*.backup
+*.bak
+*.orig
 
 #OS Junk
 Thumbs.db
