@@ -62,6 +62,10 @@
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="GameWithNoesis.cs" />
     <Compile Include="Program.cs" />
@@ -84,6 +88,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="app.manifest" />
     <None Include="Data\Fonts\Roboto-Bold.ttf" />
     <None Include="Data\Fonts\Roboto-BoldItalic.ttf" />
     <None Include="Data\Fonts\Roboto-Italic.ttf" />
