@@ -26,7 +26,7 @@ Installation
           |--index.html
           |--version.txt
 ```
-3. Open `NoesisGUI.MonoGameWrapper.sln` with Visual Studio 2015
+3. Open `NoesisGUI.MonoGameWrapper.sln` with Visual Studio
 4. Open context menu on `TestMonoGameNoesisGUI` project and select `Set as StartUp Project`.
 5. Press F5 to launch the example game project.
 6. You can change the XAML files while the game is running
