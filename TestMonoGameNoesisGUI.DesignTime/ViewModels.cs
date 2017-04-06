@@ -1,31 +1,38 @@
-﻿using System.Windows.Media;
-
-namespace TestMonoGameNoesisGUI.DesignTime
+﻿namespace TestMonoGameNoesisGUI.DesignTime
 {
     using System;
+    using System.Windows.Media;
     using System.Windows.Media.Imaging;
-
-    public class WrappedTexture
-    {
-        public ImageSource ImageSource { get; }
-
-        public WrappedTexture(string uri)
-        {
-            ImageSource = new BitmapImage(new Uri(uri));
-        }
-    }
 
     public class ViewModel
     {
-        public WrappedTexture MonogameTexture { get; }
-        public WrappedTexture MonogameRenderTarget { get; }
+        #region Static Fields
+
+        public static ViewModel Instance = new ViewModel();
+
+        #endregion
+
+        #region Constructors and Destructors
 
         public ViewModel()
         {
-            MonogameTexture = new WrappedTexture("https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/MonoGame_Logo.svg/512px-MonoGame_Logo.svg.png");
-            MonogameRenderTarget = new WrappedTexture("https://pbs.twimg.com/media/CnBt-QNWcAE2tnd.jpg");
+            MonogameTextureSource = CreateImageSource("https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/MonoGame_Logo.svg/512px-MonoGame_Logo.svg.png");
+            MonogameRenderTargetSource = CreateImageSource("https://pbs.twimg.com/media/CnBt-QNWcAE2tnd.jpg");
         }
 
-        public static ViewModel Instance = new ViewModel();
+        private static ImageSource CreateImageSource(string url)
+        {
+            return new BitmapImage(new Uri(url));
+        }
+
+        #endregion
+
+        #region Public Properties
+
+        public ImageSource MonogameRenderTargetSource { get; }
+
+        public ImageSource MonogameTextureSource { get; }
+
+        #endregion
     }
 }

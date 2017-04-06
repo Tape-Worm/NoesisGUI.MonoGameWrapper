@@ -1,22 +1,30 @@
-﻿using System;
-
-namespace TestMonoGameNoesisGUI
+﻿namespace TestMonoGameNoesisGUI
 {
+    using System;
+
 #if WINDOWS || LINUX
+
     /// <summary>
-    /// The main class.
+    ///     The main class.
     /// </summary>
     public static class Program
     {
+        #region Methods
+
         /// <summary>
-        /// The main entry point for the application.
+        ///     The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             using (var game = new GameWithNoesis())
+            {
                 game.Run();
+            }
         }
+
+        #endregion
     }
+
 #endif
 }

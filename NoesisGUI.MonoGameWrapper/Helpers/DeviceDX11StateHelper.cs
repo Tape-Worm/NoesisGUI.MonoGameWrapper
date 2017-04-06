@@ -1,73 +1,69 @@
 ﻿namespace NoesisGUI.MonoGameWrapper.Helpers
 {
-    #region
-
     using SharpDX;
     using SharpDX.Direct3D;
     using SharpDX.Direct3D11;
     using SharpDX.DXGI;
 
-    #endregion
-
     /// <summary>
     ///     This helper provide methods for saving and restoring DX11 graphics device state
     ///     with MonoGame. Provided by NoesisGUI team
     /// </summary>
-    internal class DeviceDX11StateHelper
+    internal class DeviceDx11StateHelper
     {
         #region Fields
 
-        private Color4 blendFactor;
+        private readonly Buffer[] m_Vb = new Buffer[1];
 
-        private BlendState blendState;
+        private readonly int[] m_VbOffset = new int[1];
 
-        private DepthStencilState depthState;
+        private readonly int[] m_VbStride = new int[1];
 
-        private DepthStencilView depthStencilView;
+        private Color4 m_BlendFactor;
 
-        private Buffer ib;
+        private BlendState m_BlendState;
 
-        private Format ibFormat;
+        private DepthStencilState m_DepthState;
 
-        private int ibOffset;
+        private DepthStencilView m_DepthStencilView;
 
-        private InputLayout layout;
+        private Buffer m_Ib;
 
-        private PixelShader ps;
+        private Format m_IbFormat;
 
-        private Buffer[] psConstantBuffers;
+        private int m_IbOffset;
 
-        private ShaderResourceView[] psResources;
+        private InputLayout m_Layout;
 
-        private SamplerState[] psSamplers;
+        private PixelShader m_Ps;
 
-        private RasterizerState rasterizerState;
+        private Buffer[] m_PsConstantBuffers;
 
-        private RenderTargetView[] renderTargetView;
+        private ShaderResourceView[] m_PsResources;
 
-        private int sampleMaskRef;
+        private SamplerState[] m_PsSamplers;
 
-        private Rectangle[] scissorRectangles;
+        private RasterizerState m_RasterizerState;
 
-        private int stencilRefRef;
+        private RenderTargetView[] m_RenderTargetView;
 
-        private PrimitiveTopology topology;
+        private int m_SampleMaskRef;
 
-        private Buffer[] vb = new Buffer[1];
+        private Rectangle[] m_ScissorRectangles;
 
-        private int[] vbOffset = new int[1];
+        private int m_StencilRefRef;
 
-        private int[] vbStride = new int[1];
+        private PrimitiveTopology m_Topology;
 
-        private ViewportF[] viewports;
+        private ViewportF[] m_Viewports;
 
-        private VertexShader vs;
+        private VertexShader m_Vs;
 
-        private Buffer[] vsConstantBuffers;
+        private Buffer[] m_VsConstantBuffers;
 
-        private ShaderResourceView[] vsResources;
+        private ShaderResourceView[] m_VsResources;
 
-        private SamplerState[] vsSamplers;
+        private SamplerState[] m_VsSamplers;
 
         #endregion
 
@@ -75,55 +71,55 @@
 
         public void Restore(DeviceContext context)
         {
-            context.InputAssembler.PrimitiveTopology = this.topology;
-            context.InputAssembler.InputLayout = this.layout;
-            context.Rasterizer.SetViewports(this.viewports);
-            context.Rasterizer.SetScissorRectangles(this.scissorRectangles);
-            context.Rasterizer.State = this.rasterizerState;
-            context.OutputMerger.SetBlendState(this.blendState, this.blendFactor, this.sampleMaskRef);
-            context.OutputMerger.SetDepthStencilState(this.depthState, this.stencilRefRef);
-            context.OutputMerger.SetRenderTargets(this.depthStencilView, this.renderTargetView[0]);
+            context.InputAssembler.PrimitiveTopology = m_Topology;
+            context.InputAssembler.InputLayout = m_Layout;
+            context.Rasterizer.SetViewports(m_Viewports);
+            context.Rasterizer.SetScissorRectangles(m_ScissorRectangles);
+            context.Rasterizer.State = m_RasterizerState;
+            context.OutputMerger.SetBlendState(m_BlendState, m_BlendFactor, m_SampleMaskRef);
+            context.OutputMerger.SetDepthStencilState(m_DepthState, m_StencilRefRef);
+            context.OutputMerger.SetRenderTargets(m_DepthStencilView, m_RenderTargetView[0]);
 
-            context.PixelShader.Set(this.ps);
-            context.PixelShader.SetConstantBuffers(0, this.psConstantBuffers);
-            context.PixelShader.SetSamplers(0, this.psSamplers);
-            context.PixelShader.SetShaderResources(0, this.psResources);
+            context.PixelShader.Set(m_Ps);
+            context.PixelShader.SetConstantBuffers(0, m_PsConstantBuffers);
+            context.PixelShader.SetSamplers(0, m_PsSamplers);
+            context.PixelShader.SetShaderResources(0, m_PsResources);
 
-            context.VertexShader.Set(this.vs);
-            context.VertexShader.SetConstantBuffers(0, this.vsConstantBuffers);
-            context.VertexShader.SetSamplers(0, this.vsSamplers);
-            context.VertexShader.SetShaderResources(0, this.vsResources);
+            context.VertexShader.Set(m_Vs);
+            context.VertexShader.SetConstantBuffers(0, m_VsConstantBuffers);
+            context.VertexShader.SetSamplers(0, m_VsSamplers);
+            context.VertexShader.SetShaderResources(0, m_VsResources);
 
-            context.InputAssembler.SetIndexBuffer(this.ib, this.ibFormat, this.ibOffset);
-            context.InputAssembler.SetVertexBuffers(0, this.vb, this.vbStride, this.vbOffset);
+            context.InputAssembler.SetIndexBuffer(m_Ib, m_IbFormat, m_IbOffset);
+            context.InputAssembler.SetVertexBuffers(0, m_Vb, m_VbStride, m_VbOffset);
 
-            this.renderTargetView[0]?.Dispose();
-            this.depthStencilView?.Dispose();
+            m_RenderTargetView[0]?.Dispose();
+            m_DepthStencilView?.Dispose();
         }
 
         public void Save(DeviceContext context)
         {
-            this.topology = context.InputAssembler.PrimitiveTopology;
-            this.layout = context.InputAssembler.InputLayout;
-            this.viewports = context.Rasterizer.GetViewports();
-            this.scissorRectangles = context.Rasterizer.GetScissorRectangles();
-            this.rasterizerState = context.Rasterizer.State;
-            this.blendState = context.OutputMerger.GetBlendState(out this.blendFactor, out this.sampleMaskRef);
-            this.depthState = context.OutputMerger.GetDepthStencilState(out this.stencilRefRef);
-            this.renderTargetView = context.OutputMerger.GetRenderTargets(1, out this.depthStencilView);
+            m_Topology = context.InputAssembler.PrimitiveTopology;
+            m_Layout = context.InputAssembler.InputLayout;
+            m_Viewports = context.Rasterizer.GetViewports();
+            m_ScissorRectangles = context.Rasterizer.GetScissorRectangles();
+            m_RasterizerState = context.Rasterizer.State;
+            m_BlendState = context.OutputMerger.GetBlendState(out m_BlendFactor, out m_SampleMaskRef);
+            m_DepthState = context.OutputMerger.GetDepthStencilState(out m_StencilRefRef);
+            m_RenderTargetView = context.OutputMerger.GetRenderTargets(1, out m_DepthStencilView);
 
-            this.ps = context.PixelShader.Get();
-            this.psConstantBuffers = context.PixelShader.GetConstantBuffers(0, 4);
-            this.psSamplers = context.PixelShader.GetSamplers(0, 4);
-            this.psResources = context.PixelShader.GetShaderResources(0, 4);
+            m_Ps = context.PixelShader.Get();
+            m_PsConstantBuffers = context.PixelShader.GetConstantBuffers(0, 4);
+            m_PsSamplers = context.PixelShader.GetSamplers(0, 4);
+            m_PsResources = context.PixelShader.GetShaderResources(0, 4);
 
-            this.vs = context.VertexShader.Get();
-            this.vsConstantBuffers = context.VertexShader.GetConstantBuffers(0, 4);
-            this.vsSamplers = context.VertexShader.GetSamplers(0, 4);
-            this.vsResources = context.VertexShader.GetShaderResources(0, 4);
+            m_Vs = context.VertexShader.Get();
+            m_VsConstantBuffers = context.VertexShader.GetConstantBuffers(0, 4);
+            m_VsSamplers = context.VertexShader.GetSamplers(0, 4);
+            m_VsResources = context.VertexShader.GetShaderResources(0, 4);
 
-            context.InputAssembler.GetIndexBuffer(out this.ib, out this.ibFormat, out this.ibOffset);
-            context.InputAssembler.GetVertexBuffers(0, 1, this.vb, this.vbStride, this.vbOffset);
+            context.InputAssembler.GetIndexBuffer(out m_Ib, out m_IbFormat, out m_IbOffset);
+            context.InputAssembler.GetVertexBuffers(0, 1, m_Vb, m_VbStride, m_VbOffset);
         }
 
         #endregion

@@ -1,200 +1,200 @@
 <UserControl
-   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-   xmlns:designTime="clr-namespace:TestMonoGameNoesisGUI.DesignTime"
-   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-   mc:Ignorable="d" 
-   Style="{DynamicResource RootContainerStyle}">
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:designTime="clr-namespace:TestMonoGameNoesisGUI.DesignTime"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    mc:Ignorable="d"
+    Style="{DynamicResource RootContainerStyle}">
     <UserControl.Resources>
-        <ResourceDictionary Source="NoesisStyle.xaml"/>
+        <ResourceDictionary Source="NoesisStyle.xaml" />
     </UserControl.Resources>
     <d:DesignProperties.DataContext>
-        <x:Static Member="designTime:ViewModel.Instance"/>
+        <x:Static Member="designTime:ViewModel.Instance" />
     </d:DesignProperties.DataContext>
     <Viewbox Margin="10">
         <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <GroupBox Grid.Column="0" Header="Settings" Padding="10">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
                     </Grid.RowDefinitions>
                     <TextBlock
-               Grid.Column="0"
-               Grid.Row="0"
-               HorizontalAlignment="Right"
-               Margin="0,0,4,0"
-               VerticalAlignment="Center"
-               Text="Box width"/>
+                        Grid.Column="0"
+                        Grid.Row="0"
+                        HorizontalAlignment="Right"
+                        Margin="0,0,4,0"
+                        VerticalAlignment="Center"
+                        Text="Box width" />
                     <ComboBox
-               x:Name="BoxWidth"
-               MinWidth="100"
-               Grid.Column="1"
-               Grid.Row="0"
-               Margin="0,1"
-               VerticalAlignment="Center"
-               SelectedIndex="0">
-                        <ComboBoxItem Content="Allow grow"/>
-                        <ComboBoxItem Content="100"/>
-                        <ComboBoxItem Content="200"/>
+                        x:Name="BoxWidth"
+                        MinWidth="100"
+                        Grid.Column="1"
+                        Grid.Row="0"
+                        Margin="0,1"
+                        VerticalAlignment="Center"
+                        SelectedIndex="0">
+                        <ComboBoxItem Content="Allow grow" />
+                        <ComboBoxItem Content="100" />
+                        <ComboBoxItem Content="200" />
                     </ComboBox>
                     <TextBlock
-               Grid.Column="0"
-               Grid.Row="1"
-               HorizontalAlignment="Right"
-               Margin="0,0,4,0"
-               VerticalAlignment="Center"
-               Text="Wrap text"/>
+                        Grid.Column="0"
+                        Grid.Row="1"
+                        HorizontalAlignment="Right"
+                        Margin="0,0,4,0"
+                        VerticalAlignment="Center"
+                        Text="Wrap text" />
                     <ComboBox
-               x:Name="WrapText"
-               Grid.Column="1"
-               Grid.Row="1"
-               Margin="0,1"
-               VerticalAlignment="Center"
-               SelectedIndex="0">
-                        <ComboBoxItem Content="NoWrap"/>
-                        <ComboBoxItem Content="Wrap"/>
+                        x:Name="WrapText"
+                        Grid.Column="1"
+                        Grid.Row="1"
+                        Margin="0,1"
+                        VerticalAlignment="Center"
+                        SelectedIndex="0">
+                        <ComboBoxItem Content="NoWrap" />
+                        <ComboBoxItem Content="Wrap" />
                     </ComboBox>
                     <TextBlock
-               Grid.Column="0"
-               Grid.Row="2"
-               HorizontalAlignment="Right"
-               Margin="0,0,4,0"
-               VerticalAlignment="Center"
-               Text="Accepts return"/>
+                        Grid.Column="0"
+                        Grid.Row="2"
+                        HorizontalAlignment="Right"
+                        Margin="0,0,4,0"
+                        VerticalAlignment="Center"
+                        Text="Accepts return" />
                     <CheckBox
-               x:Name="AcceptsReturn"
-               Grid.Column="1"
-               Grid.Row="2"
-               VerticalAlignment="Center"/>
+                        x:Name="AcceptsReturn"
+                        Grid.Column="1"
+                        Grid.Row="2"
+                        VerticalAlignment="Center" />
                     <!--TextBlock Grid.Row="3" Grid.Column="0" Text="Accepts tab" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,4,0"/>
         <CheckBox Grid.Row="3" Grid.Column="1" x:Name="AcceptsTab" VerticalAlignment="Center"/-->
                     <TextBlock
-               Grid.Column="0"
-               Grid.Row="4"
-               HorizontalAlignment="Right"
-               Margin="0,0,4,0"
-               VerticalAlignment="Center"
-               Text="Is read only"/>
+                        Grid.Column="0"
+                        Grid.Row="4"
+                        HorizontalAlignment="Right"
+                        Margin="0,0,4,0"
+                        VerticalAlignment="Center"
+                        Text="Is read only" />
                     <CheckBox
-               x:Name="ReadOnly"
-               Grid.Column="1"
-               Grid.Row="4"
-               VerticalAlignment="Center"/>
+                        x:Name="ReadOnly"
+                        Grid.Column="1"
+                        Grid.Row="4"
+                        VerticalAlignment="Center" />
                     <TextBlock
-               Grid.Column="0"
-               Grid.Row="5"
-               HorizontalAlignment="Right"
-               Margin="0,0,4,0"
-               VerticalAlignment="Center"
-               Text="Min lines"/>
+                        Grid.Column="0"
+                        Grid.Row="5"
+                        HorizontalAlignment="Right"
+                        Margin="0,0,4,0"
+                        VerticalAlignment="Center"
+                        Text="Min lines" />
                     <StackPanel Grid.Column="1" Grid.Row="5" Orientation="Horizontal">
                         <Slider
-                  x:Name="MinLines"
-                  Width="80"
-                  Margin="0,1"
-                  IsSnapToTickEnabled="True"
-                  Maximum="5"
-                  Minimum="1"
-                  SmallChange="1"
-                  TickPlacement="BottomRight"/>
+                            x:Name="MinLines"
+                            Width="80"
+                            Margin="0,1"
+                            IsSnapToTickEnabled="True"
+                            Maximum="5"
+                            Minimum="1"
+                            SmallChange="1"
+                            TickPlacement="BottomRight" />
                         <TextBlock
-                  MinWidth="30"
-                  VerticalAlignment="Center"
-                  Text="{Binding Value, ElementName=MinLines}"
-                  TextAlignment="Right"/>
+                            MinWidth="30"
+                            VerticalAlignment="Center"
+                            Text="{Binding Value, ElementName=MinLines}"
+                            TextAlignment="Right" />
                     </StackPanel>
                     <TextBlock
-               Grid.Column="0"
-               Grid.Row="6"
-               HorizontalAlignment="Right"
-               Margin="0,0,4,0"
-               VerticalAlignment="Center"
-               Text="Max lines"/>
+                        Grid.Column="0"
+                        Grid.Row="6"
+                        HorizontalAlignment="Right"
+                        Margin="0,0,4,0"
+                        VerticalAlignment="Center"
+                        Text="Max lines" />
                     <StackPanel Grid.Column="1" Grid.Row="6" Orientation="Horizontal">
                         <Slider
-                  x:Name="MaxLines"
-                  Width="80"
-                  Margin="0,1"
-                  IsSnapToTickEnabled="True"
-                  Maximum="10"
-                  Minimum="5"
-                  SmallChange="1"
-                  TickPlacement="BottomRight"
-                  Value="5"/>
+                            x:Name="MaxLines"
+                            Width="80"
+                            Margin="0,1"
+                            IsSnapToTickEnabled="True"
+                            Maximum="10"
+                            Minimum="5"
+                            SmallChange="1"
+                            TickPlacement="BottomRight"
+                            Value="5" />
                         <TextBlock
-                  MinWidth="30"
-                  VerticalAlignment="Center"
-                  Text="{Binding Value, ElementName=MaxLines}"
-                  TextAlignment="Right"/>
+                            MinWidth="30"
+                            VerticalAlignment="Center"
+                            Text="{Binding Value, ElementName=MaxLines}"
+                            TextAlignment="Right" />
                     </StackPanel>
                     <TextBlock
-               Grid.Column="0"
-               Grid.Row="7"
-               HorizontalAlignment="Right"
-               Margin="0,0,4,0"
-               VerticalAlignment="Center"
-               Text="Max length"/>
+                        Grid.Column="0"
+                        Grid.Row="7"
+                        HorizontalAlignment="Right"
+                        Margin="0,0,4,0"
+                        VerticalAlignment="Center"
+                        Text="Max length" />
                     <StackPanel Grid.Column="1" Grid.Row="7" Orientation="Horizontal">
                         <Slider
-                  x:Name="MaxLength"
-                  Width="80"
-                  Margin="0,1"
-                  IsSnapToTickEnabled="True"
-                  LargeChange="40"
-                  Maximum="200"
-                  SmallChange="20"
-                  TickFrequency="20"
-                  TickPlacement="BottomRight"
-                  Value="100"/>
+                            x:Name="MaxLength"
+                            Width="80"
+                            Margin="0,1"
+                            IsSnapToTickEnabled="True"
+                            LargeChange="40"
+                            Maximum="200"
+                            SmallChange="20"
+                            TickFrequency="20"
+                            TickPlacement="BottomRight"
+                            Value="100" />
                         <TextBlock
-                  MinWidth="30"
-                  VerticalAlignment="Center"
-                  Text="{Binding Value, ElementName=MaxLength}"
-                  TextAlignment="Right"/>
+                            MinWidth="30"
+                            VerticalAlignment="Center"
+                            Text="{Binding Value, ElementName=MaxLength}"
+                            TextAlignment="Right" />
                     </StackPanel>
                 </Grid>
             </GroupBox>
             <UniformGrid Grid.Column="1" Rows="2">
                 <GroupBox Margin="10,0,0,0" Header="TextBox" Padding="10">
                     <TextBox
-               x:Name="NoWrapText"
-               Width="{Binding SelectedItem.Content, ElementName=BoxWidth}"
-               HorizontalAlignment="Left"
-               VerticalAlignment="Top"
-               AcceptsReturn="{Binding IsChecked, ElementName=AcceptsReturn}"
-               AcceptsTab="{Binding IsChecked, ElementName=AcceptsTab}"
-               IsReadOnly="{Binding IsChecked, ElementName=ReadOnly}"
-               MaxLength="{Binding Value, ElementName=MaxLength}"
-               MaxLines="{Binding Value, ElementName=MaxLines}"
-               MinLines="{Binding Value, ElementName=MinLines}"
-               ScrollViewer.VerticalScrollBarVisibility="Auto"
-               Text="Textbox"
-               TextWrapping="{Binding SelectedItem.Content, ElementName=WrapText}"/>
+                        x:Name="NoWrapText"
+                        Width="{Binding SelectedItem.Content, ElementName=BoxWidth}"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        AcceptsReturn="{Binding IsChecked, ElementName=AcceptsReturn}"
+                        AcceptsTab="{Binding IsChecked, ElementName=AcceptsTab}"
+                        IsReadOnly="{Binding IsChecked, ElementName=ReadOnly}"
+                        MaxLength="{Binding Value, ElementName=MaxLength}"
+                        MaxLines="{Binding Value, ElementName=MaxLines}"
+                        MinLines="{Binding Value, ElementName=MinLines}"
+                        ScrollViewer.VerticalScrollBarVisibility="Auto"
+                        Text="Textbox"
+                        TextWrapping="{Binding SelectedItem.Content, ElementName=WrapText}" />
                 </GroupBox>
                 <UniformGrid Columns="2">
                     <GroupBox Margin="10,0,0,0" Header="Monogame render target" Padding="10">
-                        <Image Width="64" Height="64" Source="{Binding MonogameRenderTarget.ImageSource}"/>
+                        <Image Width="64" Height="64" Source="{Binding MonogameRenderTargetSource}" />
                     </GroupBox>
                     <GroupBox Margin="10,0,0,0" Header="Monogame texture" Padding="10">
                         <Rectangle Width="64" Height="64">
                             <Rectangle.Fill>
-                                <ImageBrush ImageSource="{Binding MonogameTexture.ImageSource}"/>
+                                <ImageBrush ImageSource="{Binding MonogameTextureSource}" />
                             </Rectangle.Fill>
                         </Rectangle>
                     </GroupBox>

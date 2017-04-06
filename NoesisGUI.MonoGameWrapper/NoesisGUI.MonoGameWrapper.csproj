@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NoesisGUI.MonoGameWrapper</RootNamespace>
     <AssemblyName>NoesisGUI.MonoGameWrapper</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -56,13 +56,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\DeviceDX11StateHelper.cs" />
+    <Compile Include="IWrappedTexture.cs" />
     <Compile Include="NoesisWrapper.cs" />
     <Compile Include="Input\InputManager.cs" />
-    <Compile Include="Input\KeyMappings.cs" />
+    <Compile Include="Input\MonoGameNoesisKeys.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NoesisSDK\Src\NoesisManaged.csproj">
+    <ProjectReference Include="..\NoesisSDK\Src\NoesisManaged\NoesisManaged.csproj">
       <Project>{324797a8-3464-4290-a307-2ab238bacca3}</Project>
       <Name>NoesisManaged</Name>
     </ProjectReference>

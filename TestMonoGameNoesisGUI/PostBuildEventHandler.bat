@@ -5,7 +5,7 @@ REM %1="$(ProjectDir)"
 REM %2="$(TargetDir)"
 REM %3="$(PlatformName)"
 
-ECHO Copying native Noesis dlls to output...
+ECHO Copying native Noesis %3 dlls to output...
 
 IF %3 EQU "x86" (
 	XCOPY /y /d "%1..\NoesisSDK\Bin\windows_x86\*" %2

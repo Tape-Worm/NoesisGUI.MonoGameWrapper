@@ -1,21 +1,12 @@
-﻿using System;
-
-namespace TestMonoGameNoesisGUI
+﻿namespace TestMonoGameNoesisGUI
 {
-    #region
-
-    using System.Diagnostics;
+    using System;
 
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
 
     using NoesisGUI.MonoGameWrapper;
-
-    using Color = Microsoft.Xna.Framework.Color;
-    using Keyboard = Microsoft.Xna.Framework.Input.Keyboard;
-
-    #endregion
 
     /// <summary>
     ///     This is an example MonoGame game using NoesisGUI 1.3 beta
@@ -24,30 +15,22 @@ namespace TestMonoGameNoesisGUI
     {
         #region Fields
 
-        private GraphicsDeviceManager graphics;
-
-        private NoesisWrapper noesisWrapper;
-
-        private SpriteBatch spriteBatch;
+        private readonly GraphicsDeviceManager m_Graphics;
 
         // NOTE: In a real application, one would use a texture atlas, instead of two different textures ;-)
-        private Texture2D monogameLogoTexture;
-        private Texture2D noesisGuiLogoTexture;
-        private RenderTarget2D renderTarget;
+        private Texture2D m_MonogameLogoTexture;
 
-        public class ViewModel
-        {
-            public IWrappedTexture MonogameTexture { get; }
-            public IWrappedTexture MonogameRenderTarget { get; }
+        private Texture2D m_NoesisGuiLogoTexture;
 
-            public ViewModel(IWrappedTexture monogameTexture, IWrappedTexture monogameRenderTarget)
-            {
-                this.MonogameTexture = monogameTexture;
-                this.MonogameRenderTarget = monogameRenderTarget;
-            }
-        }
+        private NoesisWrapper m_NoesisWrapper;
 
-        private ViewModel viewModel;
+        private RenderTarget2D m_RenderTarget;
+
+        private SpriteBatch m_SpriteBatch;
+
+        private ViewModel m_ViewModel;
+
+        private IWrappedTexture m_WrappedRenderTarget;
 
         #endregion
 
@@ -59,38 +42,20 @@ namespace TestMonoGameNoesisGUI
             Window.AllowUserResizing = true;
             Window.ClientSizeChanged += HandleWindowClientSizeChanged;
 
-            graphics = new GraphicsDeviceManager(this)
+            m_Graphics = new GraphicsDeviceManager(this)
+                         {
+                             // TODO: Disable/enable MSAA here
+                             PreferMultiSampling = true
+                         };
+
+            m_Graphics.PreparingDeviceSettings += delegate(object sender, PreparingDeviceSettingsEventArgs args)
             {
-                // TODO: Disable/enable MSAA here
-                PreferMultiSampling = true
+                // TODO: Set MSAA levels here
+                var presentationParameters = args.GraphicsDeviceInformation.PresentationParameters;
+                presentationParameters.MultiSampleCount = 8;
             };
 
-            graphics.PreparingDeviceSettings += delegate (object sender, PreparingDeviceSettingsEventArgs args)
-                {
-                    // TODO: Set MSAA levels here
-                    var presentationParameters = args.GraphicsDeviceInformation.PresentationParameters;
-                    presentationParameters.MultiSampleCount = 8;
-                };
-
             Content.RootDirectory = "Content";
-        }
-
-        private void HandleWindowClientSizeChanged(object sender, EventArgs e)
-        {
-            var bounds = this.Window.ClientBounds;
-
-            // When minimized, width and height will be 0
-            if (bounds.Width <= 0 || bounds.Height <= 0)
-                return;
-
-            // Avoid endless recursion bug in Monogame.
-            if (graphics.PreferredBackBufferWidth == bounds.Width &&
-                graphics.PreferredBackBufferHeight == bounds.Height)
-                return;
-
-            graphics.PreferredBackBufferWidth = bounds.Width;
-            graphics.PreferredBackBufferHeight = bounds.Height;
-            graphics.ApplyChanges();
         }
 
         #endregion
@@ -103,9 +68,8 @@ namespace TestMonoGameNoesisGUI
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            this.noesisWrapper.PreRender(gameTime);
-            this.Render(gameTime);
-            this.noesisWrapper.PostRender();
+            Render(gameTime);
+            m_NoesisWrapper.Draw(gameTime);
             base.Draw(gameTime);
         }
 
@@ -117,11 +81,11 @@ namespace TestMonoGameNoesisGUI
         /// </summary>
         protected override void Initialize()
         {
-            this.IsMouseVisible = true;
+            IsMouseVisible = true;
 
-            this.noesisWrapper = new NoesisWrapper(
+            m_NoesisWrapper = new NoesisWrapper(
                 this,
-                this.graphics,
+                m_Graphics,
                 shouldAutoReloadChangedFiles: true,
                 rootXamlRelativePath: "NoesisRoot.xaml",
                 themeResourcesRelativePath: "NoesisStyle.xaml",
@@ -139,20 +103,76 @@ namespace TestMonoGameNoesisGUI
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
+            m_SpriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            this.monogameLogoTexture = this.Content.Load<Texture2D>("MonogameLogo");
-            this.noesisGuiLogoTexture = this.Content.Load<Texture2D>("NoesisGuiLogo");
+            m_MonogameLogoTexture = Content.Load<Texture2D>("MonogameLogo");
+            m_NoesisGuiLogoTexture = Content.Load<Texture2D>("NoesisGuiLogo");
 
-            this.renderTarget = new RenderTarget2D(GraphicsDevice, 512, 512, true, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
+            m_RenderTarget = new RenderTarget2D(
+                GraphicsDevice,
+                512,
+                512,
+                true,
+                SurfaceFormat.Color,
+                DepthFormat.None,
+                0,
+                RenderTargetUsage.PreserveContents);
 
             // An example of how to share a monogame texture with Noesis
-            var textureSource = this.noesisWrapper.Wrap(this.monogameLogoTexture);
-            var targetSource = this.noesisWrapper.Wrap(this.renderTarget);
+            var textureSource = NoesisWrapper.Wrap(m_MonogameLogoTexture);
+            m_WrappedRenderTarget = NoesisWrapper.Wrap(m_RenderTarget);
+            m_ViewModel = new ViewModel(textureSource, m_WrappedRenderTarget);
+            m_NoesisWrapper.View.Content.DataContext = m_ViewModel;
+        }
 
-            this.viewModel = new ViewModel(textureSource, targetSource);
-            this.noesisWrapper.View.Content.DataContext = viewModel;
+        protected virtual void Render(GameTime gameTime)
+        {
+            // NOTE: Ignore any Commodore 64/Amiga demo-style code here ;-)
+            var backBufferWidth = GraphicsDevice.PresentationParameters.BackBufferWidth;
+            var backBufferHeight = GraphicsDevice.PresentationParameters.BackBufferHeight;
+            var logoPosX = (float)(gameTime.TotalGameTime.TotalSeconds * 200 % backBufferWidth);
+            var logoPosY = (float)Math.Abs(50 * Math.Sin(gameTime.TotalGameTime.TotalSeconds * 5));
+            var scale = new Vector2(0.1f);
+
+            // Render to texture
+            GraphicsDevice.SetRenderTarget(m_RenderTarget);
+            GraphicsDevice.Clear(Color.SandyBrown);
+
+            m_SpriteBatch.Begin();
+            m_SpriteBatch.Draw(
+                m_NoesisGuiLogoTexture,
+                origin: new Vector2(m_NoesisGuiLogoTexture.Width / 2f, m_NoesisGuiLogoTexture.Height / 2f),
+                rotation: (float)gameTime.TotalGameTime.TotalSeconds,
+                position: new Vector2(m_RenderTarget.Width / 2f, m_RenderTarget.Width / 2f));
+            m_SpriteBatch.End();
+
+            m_WrappedRenderTarget.GenerateMipMaps();
+
+            // Render to backbuffer 
+            GraphicsDevice.SetRenderTarget(null);
+
+            // TODO: Add your drawing code here
+            GraphicsDevice.Clear(
+                ClearOptions.Target | ClearOptions.DepthBuffer | ClearOptions.Stencil,
+                Color.CornflowerBlue,
+                1,
+                0);
+
+            m_SpriteBatch.Begin();
+            m_SpriteBatch.Draw(m_MonogameLogoTexture, new Vector2(logoPosX, logoPosY), scale: scale);
+            m_SpriteBatch.Draw(
+                m_NoesisGuiLogoTexture,
+                new Vector2(
+                    backBufferWidth - logoPosX,
+                    backBufferHeight - m_NoesisGuiLogoTexture.Height * scale.Y - logoPosY),
+                scale: scale);
+            m_SpriteBatch.End();
+        }
+
+        protected virtual void Tick(GameTime gameTime)
+        {
+            // TODO: Add your update logic here
         }
 
         /// <summary>
@@ -177,57 +197,57 @@ namespace TestMonoGameNoesisGUI
                 Exit();
             }
 
-            this.noesisWrapper.Update(gameTime);
+            m_NoesisWrapper.Update(gameTime);
 
             Tick(gameTime);
 
             base.Update(gameTime);
         }
 
-        protected virtual void Tick(GameTime gameTime)
+        private void HandleWindowClientSizeChanged(object sender, EventArgs e)
         {
-            // TODO: Add your update logic here
-        }
+            var bounds = Window.ClientBounds;
 
-        protected virtual void Render(GameTime gameTime)
-        {
-            // NOTE: Ignore any Commodore 64/Amiga demo-style code here ;-)
-            var backBufferWidth = this.GraphicsDevice.PresentationParameters.BackBufferWidth;
-            var backBufferHeight = this.GraphicsDevice.PresentationParameters.BackBufferHeight;
-            float logoPosX = (float)(gameTime.TotalGameTime.TotalSeconds * 200 % backBufferWidth);
-            float logoPosY = (float)(Math.Abs(50 * Math.Sin(gameTime.TotalGameTime.TotalSeconds * 5)));
-            var scale = new Vector2(0.1f);
+            // When minimized, width and height will be 0
+            if (bounds.Width <= 0
+                || bounds.Height <= 0)
+            {
+                return;
+            }
 
-            // Render to texture
-            this.GraphicsDevice.SetRenderTarget(this.renderTarget);
-            this.GraphicsDevice.Clear(Color.SandyBrown);
+            // Avoid endless recursion bug in Monogame.
+            if (m_Graphics.PreferredBackBufferWidth == bounds.Width
+                && m_Graphics.PreferredBackBufferHeight == bounds.Height)
+            {
+                return;
+            }
 
-            this.spriteBatch.Begin();
-            this.spriteBatch.Draw(this.noesisGuiLogoTexture,
-                origin: new Vector2(this.noesisGuiLogoTexture.Width / 2f, this.noesisGuiLogoTexture.Height / 2f),
-                rotation: (float)gameTime.TotalGameTime.TotalSeconds,
-                position: new Vector2(this.renderTarget.Width / 2f, this.renderTarget.Width / 2f));
-            this.spriteBatch.End();
-
-            this.viewModel.MonogameRenderTarget.GenerateMipMaps();
-
-            // Render to backbuffer 
-            this.GraphicsDevice.SetRenderTarget(null);
-
-            // TODO: Add your drawing code here
-            this.GraphicsDevice.Clear(
-                ClearOptions.Target | ClearOptions.DepthBuffer | ClearOptions.Stencil,
-                Color.CornflowerBlue,
-                1,
-                0);
-
-
-            this.spriteBatch.Begin();
-            this.spriteBatch.Draw(this.monogameLogoTexture, new Vector2(logoPosX, logoPosY), scale: scale);
-            this.spriteBatch.Draw(this.noesisGuiLogoTexture, new Vector2(backBufferWidth - logoPosX, backBufferHeight - this.noesisGuiLogoTexture.Height * scale.Y - logoPosY), scale: scale);
-            this.spriteBatch.End();
+            m_Graphics.PreferredBackBufferWidth = bounds.Width;
+            m_Graphics.PreferredBackBufferHeight = bounds.Height;
+            m_Graphics.ApplyChanges();
         }
 
         #endregion
+
+        public class ViewModel
+        {
+            #region Constructors and Destructors
+
+            public ViewModel(IWrappedTexture monogameTexture, IWrappedTexture monogameRenderTarget)
+            {
+                MonogameTextureSource = new Noesis.TextureSource(monogameTexture.NoesisTexture);
+                MonogameRenderTargetSource = new Noesis.TextureSource(monogameRenderTarget.NoesisTexture);
+            }
+
+            #endregion
+
+            #region Public Properties
+
+            public Noesis.TextureSource MonogameRenderTargetSource { get; }
+
+            public Noesis.TextureSource MonogameTextureSource { get; }
+
+            #endregion
+        }
     }
 }

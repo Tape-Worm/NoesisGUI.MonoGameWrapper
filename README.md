@@ -1,21 +1,21 @@
-NoesisGUI 1.3 beta 3 MonoGame Integration experiment (forked from [aienabled](https://github.com/aienabled/NoesisGUI.MonoGameWrapper))
+NoesisGUI 2.0 MonoGame Integration experiment (forked from [aienabled](https://github.com/aienabled/NoesisGUI.MonoGameWrapper))
 =============
-This library provides a solution for integration [NoesisGUI 1.3](http://noesisengine.com) with [MonoGame 3.*](http://monogame.net) library.
+This library provides a solution for integrating [NoesisGUI 2.0](http://noesisengine.com) with the [MonoGame 3.*](http://monogame.net) library.
 
 Currently it supports only MonoGame projects for Windows DX11.
 
-Example MonoGame project with integrated NoesisGUI is included.
+An example MonoGame project with integrated NoesisGUI is included.
 
 The wrapper optionally supports some kind of **"XAML edit-and-continue"**; when any XAML file in the data folder is changed, the full UI is re-created. This is most useful if you use the MVVM pattern in your application, since you don't have to restart your application to tweak the UI.
 
 Prerequisites
 -----
-* [Visual Studio 2015](https://www.visualstudio.com/), any edition will be fine.
-* [MonoGame 3.* for VisualStudio](http://monogame.net)
+* [Visual Studio 2017](https://www.visualstudio.com/), any edition will be fine (2015 might work, untested)
+* [MonoGame 3.* for VisualStudio](http://monogame.net) (tested with 3.5.1)
 
 Installation
 -----
-1. Download the **1.3 beta3 C# Windows SDK** from [NoesisGUI Forums](http://www.noesisengine.com/forums/viewtopic.php?f=3&t=947).
+1. Download the **2.0 C# Windows SDK** from [NoesisGUI Forums](http://www.noesisengine.com/developers/downloads.php).
 2. Extract the SDK to this project's folder `NoesisSDK`. The resulting directory tree should then look like:
 ```
          NoesisSDK
@@ -35,7 +35,7 @@ Known issues
 -----
 * DeviceLost and DeviceReset are not implemented (not required for DX11 I guess, but might be for other renderers)
 * Text editing is partially fixed in this issue (the repeat rate for non-printable keys is different from the OS)
-* I experienced some layout and rendering problems when typing text; most likely this is a bug in Noesis GUI beta3, since it did not happen with beta2
+* I experienced a rendering bug when opening the comboboxes
 
 License
 -----

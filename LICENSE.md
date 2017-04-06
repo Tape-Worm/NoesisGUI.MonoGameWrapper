@@ -1,7 +1,7 @@
 The MIT License (MIT)
 
 Copyright (c) 2015 [NoesisGUI MonoGame Integration](https://github.com/aienabled)
-Copyright (c) 2016 [Strongly Typed Solutions](http://strongly-typed.net)
+Copyright (c) 2017 [Strongly Typed Solutions](http://strongly-typed.net)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
