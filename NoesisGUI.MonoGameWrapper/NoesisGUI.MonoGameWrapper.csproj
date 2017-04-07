@@ -53,8 +53,11 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\Development.cs" />
     <Compile Include="Helpers\DeviceDX11StateHelper.cs" />
     <Compile Include="IWrappedTexture.cs" />
     <Compile Include="NoesisWrapper.cs" />

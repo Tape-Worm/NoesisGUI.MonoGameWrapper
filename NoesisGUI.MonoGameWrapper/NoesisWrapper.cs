@@ -264,7 +264,7 @@
             Noesis.GUI.Shutdown();
         }
 
-        public void Draw(GameTime gameTime)
+        public void PreRender(GameTime gameTime)
         {
             m_DeviceState.Save(m_Dx11Device.ImmediateContext);
 
@@ -277,8 +277,13 @@
                 renderer.RenderOffscreen();
             }
 
-            OnRenderView();
+            m_DeviceState.Restore(m_Dx11Device.ImmediateContext);
+        }
 
+        public void PostRender()
+        {
+            m_DeviceState.Save(m_Dx11Device.ImmediateContext);
+            View.Renderer.Render();
             m_DeviceState.Restore(m_Dx11Device.ImmediateContext);
         }
 

@@ -7,6 +7,7 @@
     using Microsoft.Xna.Framework.Input;
 
     using NoesisGUI.MonoGameWrapper;
+    using NoesisGUI.MonoGameWrapper.Helpers;
 
     /// <summary>
     ///     This is an example MonoGame game using NoesisGUI 1.3 beta
@@ -42,6 +43,10 @@
             Window.AllowUserResizing = true;
             Window.ClientSizeChanged += HandleWindowClientSizeChanged;
 
+#if DEBUG
+            Window.ClientSizeChanged += PositionDevelopmentWindows;
+#endif
+
             m_Graphics = new GraphicsDeviceManager(this)
                          {
                              // TODO: Disable/enable MSAA here
@@ -58,6 +63,12 @@
             Content.RootDirectory = "Content";
         }
 
+        private void PositionDevelopmentWindows(object sender, EventArgs e)
+        {
+            Window.ClientSizeChanged -= PositionDevelopmentWindows;
+            Development.PlaceWindowsOnOuterMonitors(Window);
+        }
+
         #endregion
 
         #region Methods
@@ -68,8 +79,9 @@
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
+            m_NoesisWrapper.PreRender(gameTime);
             Render(gameTime);
-            m_NoesisWrapper.Draw(gameTime);
+            m_NoesisWrapper.PostRender();
             base.Draw(gameTime);
         }
 
@@ -90,8 +102,6 @@
                 rootXamlRelativePath: "NoesisRoot.xaml",
                 themeResourcesRelativePath: "NoesisStyle.xaml",
                 dataPath: @"..\..\..\Data");
-
-            // TODO: Add your initialization logic here
 
             base.Initialize();
         }
@@ -209,18 +219,14 @@
             var bounds = Window.ClientBounds;
 
             // When minimized, width and height will be 0
-            if (bounds.Width <= 0
-                || bounds.Height <= 0)
-            {
-                return;
-            }
+            bool isWindowMinimized = bounds.Width <= 0 || bounds.Height <= 0;
 
-            // Avoid endless recursion bug in Monogame.
-            if (m_Graphics.PreferredBackBufferWidth == bounds.Width
-                && m_Graphics.PreferredBackBufferHeight == bounds.Height)
-            {
+            // Avoid endless recursion bug in some versions of Monogame.
+            bool isBufferAlreadyResized = m_Graphics.PreferredBackBufferWidth == bounds.Width
+                                    && m_Graphics.PreferredBackBufferHeight == bounds.Height;
+
+            if (isWindowMinimized || isBufferAlreadyResized)
                 return;
-            }
 
             m_Graphics.PreferredBackBufferWidth = bounds.Width;
             m_Graphics.PreferredBackBufferHeight = bounds.Height;

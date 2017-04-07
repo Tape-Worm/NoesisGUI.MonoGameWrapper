@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
 
     using Microsoft.Xna.Framework;
@@ -47,11 +48,21 @@
 
         public void OnTextInput(TextInputEventArgs args)
         {
-            // HACK: This seems to fix a bug: after pressing backspace, 
-            // a textbox would ignore the first incoming char.
-            // Passing a 0 char seems a workaround
-            OnChar('\0');
-            OnChar(args.Character);
+            DebugPrintChar("text", args.Character);
+
+            // HACK: This seems to fix a bug: after pressing some keys like backspace or cursor left, 
+            // a Noesis textbox would ignore the next incoming char.
+            // Passing None to Noesis seems a workaround. 
+            // Need to figure out where the bug comes from, could be our code
+            m_RootView.KeyDown(Noesis.Key.None);
+
+            var newChar = args.Character;
+
+            // HACK: Space seems to be handled both as a control and textual key by Noesis, so don't pass it as a text char.
+            if (newChar != ' ')
+            {
+                OnChar(newChar);
+            }
         }
 
         public void Update(GameTime gameTime)
@@ -64,8 +75,27 @@
 
         #region Methods
 
+        [Conditional("DEBUG")]
+        private void DebugPrint(string message)
+        {
+            //Console.WriteLine(message);
+        }
+
+        [Conditional("DEBUG")]
+        private void DebugPrintChar(string header, char character)
+        {
+            DebugPrint($"{header}: 0x{(int)character:X02}");
+        }
+
+        [Conditional("DEBUG")]
+        private void DebugPrintKey(string header, Noesis.Key key)
+        {
+            DebugPrint($"{header}: {key} 0x{(int)key:X04}");
+        }
+
         private void OnChar(char character)
         {
+            DebugPrintChar("char", character);
             m_RootView.Char(character);
         }
 
@@ -113,10 +143,12 @@
             }
 
             foreach (var key in m_PreviousKeys)
+            {
                 if (!currentKeys.Contains(key))
                 {
                     m_ReleasedKeys.Add(key);
                 }
+            }
 
             // for each pressed key - KeyDown
             foreach (var keyDown in m_PressedKeys)
@@ -124,6 +156,7 @@
                 var noesisKey = MonoGameNoesisKeys.Convert(keyDown);
                 if (noesisKey != Noesis.Key.None)
                 {
+                    DebugPrintKey("keydown", noesisKey);
                     m_RootView.KeyDown(noesisKey);
                 }
             }
@@ -134,6 +167,7 @@
                 var noesisKey = MonoGameNoesisKeys.Convert(keyUp);
                 if (noesisKey != Noesis.Key.None)
                 {
+                    DebugPrintKey("keyup", noesisKey);
                     m_RootView.KeyUp(noesisKey);
                 }
             }
